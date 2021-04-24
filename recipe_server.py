@@ -97,12 +97,11 @@ if __name__ == '__main__':
                 ingredient = Ingredient(ing[0], ing[1], ing[2])
                 ingredient_list.append(ingredient.generate_dict())
             ingredient_list_copy = ingredient_list[:]
-
-            ingredient_list[:] = []
             recipe = Recipe(rec[1], rec[2], rec[3], rec[4], rec[5], rec[6], ingredient_list_copy)
             recipe.recipe_id = rec[0]
             recipe.image_file = rec[7]
             recipe_list.append(recipe.generate_dict())
+            ingredient_list[:] = []
 
         conn_recipe.close()
         conn_ingredient.close()
@@ -125,9 +124,9 @@ if __name__ == '__main__':
                             " VALUES (?, ?, ?, ?, ?,?, ?);", data_to_save)
 
         conn.commit()
-
+        id_to_save = data_cursor.lastrowid
         for x in record["ingredient_list"]:
-            ingredient = [x["ingredient"], x["amount"], x["units"], data_cursor.lastrowid]
+            ingredient = [x["ingredient"], x["amount"], x["units"], id_to_save]
             data_cursor.execute("INSERT INTO ingredient (ingredient, amount, unit, recipe_id) "
                                 "VALUES (?, ?, ?, ?)", ingredient)
             conn.commit()
