@@ -7,6 +7,7 @@ from recipe_class_def import Recipe
 from flask import request, jsonify
 
 
+
 databaseName = "recipe"
 create_table_ingredient_sql = """CREATE TABLE IF NOT EXISTS ingredient (
                         id integer primary key autoincrement,
@@ -91,14 +92,14 @@ if __name__ == '__main__':
 
             ingredient_sql = "SELECT ingredient, amount, unit FROM ingredient where recipe_id="
             ingredient_sql = ingredient_sql + str(rec[0])
-
             result_ingredient = data_cursor_ingredient.execute(ingredient_sql).fetchall()
-
             for ing in result_ingredient:
                 ingredient = Ingredient(ing[0], ing[1], ing[2])
                 ingredient_list.append(ingredient.generate_dict())
+            ingredient_list_copy = ingredient_list[:]
 
-            recipe = Recipe(rec[1], rec[2], rec[3], rec[4], rec[5], rec[6], ingredient_list)
+            ingredient_list[:] = []
+            recipe = Recipe(rec[1], rec[2], rec[3], rec[4], rec[5], rec[6], ingredient_list_copy)
             recipe.recipe_id = rec[0]
             recipe.image_file = rec[7]
             recipe_list.append(recipe.generate_dict())
@@ -140,4 +141,4 @@ if __name__ == '__main__':
         header["Access-Control-Allow-Headers"] = '*'
         return response
 
-    myapp.run()
+    myapp.run(host='192.168.0.2', port='8000')
