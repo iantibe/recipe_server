@@ -12,7 +12,7 @@ databaseName = "recipe"
 create_table_ingredient_sql = """CREATE TABLE IF NOT EXISTS ingredient (
                         id integer primary key autoincrement,
                         ingredient text,
-                        amount  integer,
+                        amount  real,
                         unit text,
                         recipe_id integer,
                         foreign key (recipe_id) references recipe(recipe_id)
@@ -65,6 +65,7 @@ def create_database():
 
 
 if __name__ == '__main__':
+
     myapp = flask.Flask(__name__)
     myapp.config['DEBUG'] = True
 
@@ -105,9 +106,7 @@ if __name__ == '__main__':
 
         conn_recipe.close()
         conn_ingredient.close()
-        """
-        :return recipe_list
-        """
+
         return jsonify(recipe_list)
 
     @myapp.route("/addrecipe", methods=['post'])
@@ -140,4 +139,4 @@ if __name__ == '__main__':
         header["Access-Control-Allow-Headers"] = '*'
         return response
 
-    myapp.run(host='192.168.0.2', port='8000')
+    myapp.run()
