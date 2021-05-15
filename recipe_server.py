@@ -1,3 +1,6 @@
+"""
+APIs for recipe web page
+"""
 import json
 import sqlite3
 from sqlite3 import Error
@@ -5,8 +8,6 @@ import flask
 from ingredient_class_def import Ingredient
 from recipe_class_def import Recipe
 from flask import request, jsonify
-
-
 
 databaseName = "recipe"
 create_table_ingredient_sql = """CREATE TABLE IF NOT EXISTS ingredient (
@@ -42,7 +43,6 @@ def init_connection():
     except Error:
         print(Error)
 
-
 def create_table(connection, sql_statement):
     """
     Creates tables for stock data
@@ -56,19 +56,16 @@ def create_table(connection, sql_statement):
     except Error:
         print(Error)
 
-
 def create_database():
     conn = init_connection()
     create_table(conn, create_table_recipe_sql)
     create_table(conn, create_table_ingredient_sql)
     conn.close()
 
-
 if __name__ == '__main__':
 
     myapp = flask.Flask(__name__)
     myapp.config['DEBUG'] = True
-
 
     @myapp.route("/recipes", methods=['GET'])
     def get_all_recipes():
@@ -90,7 +87,6 @@ if __name__ == '__main__':
                                      "FROM recipe;").fetchall()
 
         for rec in result_recipe:
-
             ingredient_sql = "SELECT ingredient, amount, unit FROM ingredient where recipe_id="
             ingredient_sql = ingredient_sql + str(rec[0])
             result_ingredient = data_cursor_ingredient.execute(ingredient_sql).fetchall()
@@ -103,10 +99,8 @@ if __name__ == '__main__':
             recipe.image_file = rec[7]
             recipe_list.append(recipe.generate_dict())
             ingredient_list[:] = []
-
         conn_recipe.close()
         conn_ingredient.close()
-
         return jsonify(recipe_list)
 
     @myapp.route("/addrecipe", methods=['post'])
